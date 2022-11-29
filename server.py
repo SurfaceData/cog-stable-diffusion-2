@@ -16,12 +16,12 @@ import typing
 
 from imwatermark import WatermarkEncoder
 from fastapi.middleware.cors import CORSMiddleware
-from diffusers import DiffusionPipeline, DDIMScheduler, DPMSolverMultistepScheduler, EulerDiscreteScheduler, PNDMScheduler, LMSDiscreteScheduler
+from diffusers import DiffusionPipeline, DDIMScheduler, DPMSolverMultistepScheduler, EulerDiscreteScheduler, EulerAncestralDiscreteScheduler, PNDMScheduler, LMSDiscreteScheduler
 from random import randint
 from secrets import token_hex
 from PIL import Image
 
-REPO_ID = "stabilityai/stable-diffusion-2"
+REPO_ID = "stabilityai/stable-diffusion-2-base"
 WATERMARK = "SDV2"
 device = "cuda"
 
@@ -72,7 +72,7 @@ class Predictor(cog.BasePredictor):
         sampler: str = cog.Input(
             default="dpm",
             description="The sampling scheduler to use to generate images.",
-            choices=["dpm", "ddim", "euler", "pndm", "lms"],
+            choices=["dpm", "ddim", "euler", "euler_a", "pndm", "lms"],
             ),
         guidance_scale: float = cog.Input(
             default=5.0,
@@ -123,6 +123,9 @@ class Predictor(cog.BasePredictor):
 
         if sampler == 'euler':
             self.pipe.scheduler = EulerDiscreteScheduler.from_config(
+                    self.pipe.scheduler.config)
+        elif sampler == 'euler_a':
+            self.pipe.scheduler = EulerAncestralDiscreteScheduler.from_config(
                     self.pipe.scheduler.config)
         elif sampler == 'dpm':
             self.pipe.scheduler = DPMSolverMultistepScheduler.from_config(

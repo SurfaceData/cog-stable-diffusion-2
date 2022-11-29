@@ -23,6 +23,6 @@ build:
   
   run:
     - pip3 install "https://github.com/apolinario/xformers/releases/download/0.0.3/xformers-0.0.14.dev0-cp38-cp38-linux_x86_64.whl"
-    - python3 -c 'import torch; from diffusers import DiffusionPipeline; p = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2", torch_dtype=torch.float16, revision="fp16")'
+    - python3 -c 'import torch; from diffusers import DiffusionPipeline; p = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-2-base", torch_dtype=torch.float16, revision="fp16")'
 
 predict: "server.py:Predictor"
